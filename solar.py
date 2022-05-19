@@ -3,8 +3,8 @@ import requests
 import datetime
 import json
 
-ASTRONOMYAPI_ID="5afae862-243b-477b-bcf0-400cc33e5a1b"
-ASTRONOMYAPI_SECRET="14ced2f1c9212a9ccdd014529be2c8e187c870889b8a28ca809b1162e24e77acd92664198e775dce7e7dcf8838f7c80ed340abb2415086ebbf5c359546099454a8dc2243e62a76dda64816be192d153f09128ba455ab5f2592b4478a28affec27a5e7ce24a1db719f04b76e7adfbf222
+ASTRONOMYAPI_ID = "5afae862-243b-477b-bcf0-400cc33e5a1b"
+ASTRONOMYAPI_SECRET = "14ced2f1c9212a9ccdd014529be2c8e187c870889b8a28ca809b1162e24e77acd92664198e775dce7e7dcf8838f7c80ed340abb2415086ebbf5c359546099454a8dc2243e62a76dda64816be192d153f09128ba455ab5f2592b4478a28affec27a5e7ce24a1db719f04b76e7adfbf222"
 def get_observer_location():
     """Returns the longitude and latitude for the location of this machine.
     Returns:
@@ -30,6 +30,10 @@ def get_sun_position(latitude, longitude):
     float: azimuth
     float: altitude
     """
+
+    response = requests.get('https://api.astronomyapi.com/api/v2/bodies/', auth=(ASTRONOMYAPI_ID, ASTRONOMYAPI_SECRET))
+    print(response)
+
     # NOTE: Replace with your real return values!
     return 0, 0
         
