@@ -2,6 +2,8 @@
 import requests
 import json
 from datetime import datetime, date
+from_date = date.today()
+to_date = date.today()
 timenow = datetime.now()
 current_time = timenow.strftime("%H:%M:%S")
 
@@ -36,26 +38,32 @@ def get_elevation(latitude,longitude): # Gets elevation from latitude and longit
     print(elevation)
     return elevation
     
-def get_sun_position(latitude, longitude):
-    """Returns the current position of the sun in the sky at the specified location
+def get_sun_position(latitude, longitude, elevation):
+    """Returns the current position of the sun in the sky at the specified location"""
     
-    Parameters:
-    latitude (str)
-    longitude (str)
+    sun_payload = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "elevation": elevation,
+        "time": current_time,
+        "from_date": from_date,
+        "to_date": to_date,
+    }
+
+    sun_response = requests.get(
+        "https://api.astronomyapi.com/api/v2/bodies/postion/sun?", 
+        params=sun_payload,
+        auth=(ASTRONOMYAPI_ID, ASTRONOMYAPI_SECRET),
+    )
+
+    sun_response_data = sun_response.json()
+    print(sun_response_data)
     
-    Returns:
-    float: azimuth
-    float: altitude
-    """
+    sun_1 = sun_response_data["data"]["table"]["rows"][0]["cells"][0]["position"]["horizontal"]
 
-    response = requests.get('https://api.astronomyapi.com/api/v2/bodies/', auth=(ASTRONOMYAPI_ID, ASTRONOMYAPI_SECRET))
-    print(response)
-
-    #Get all available bodies
-    # 
-
-    # NOTE: Replace with your real return values!
-    return 0, 0
+    azimuth = sun_1["azimuth"]["degrees"]
+    altitude = sun_1["altitude"]["degrees"]
+    return azimuth, altitude
         
 def print_position(azimuth, altitude):
     """Prints the position of the sun in the sky using the supplied coordinates
@@ -65,10 +73,11 @@ def print_position(azimuth, altitude):
     altitude (float)
     """
     
-    print("The Sun is currently at: ")
+    
+    print("The Sun is currently at: ", azimuth, altitude)
     
 if __name__== "__main__":
     latitude, longitude = get_observer_location()
     elevation = get_elevation(latitude,longitude)
-    azimuth, altitude = get_sun_position(latitude, longitude)
+    azimuth, altitude = get_sun_position(latitude, longitude, elevation)
     print_position(azimuth, altitude)
